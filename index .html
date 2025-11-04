@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para mi Princesita de Ojitos Lindos 💗</title>
+    <style>
+        body {
+            background-color: #fce4ec;
+            font-family: 'Georgia', serif;
+            color: #4a148c;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 3em;
+            color: #d81b60;
+        }
+
+        .media-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        /* ESTILO PARA LA NUEVA IMAGEN */
+        .local-video-container img {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .video-player {
+            margin-top: 30px;
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+        }
+
+        .video-player iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .poem-container {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-style: italic;
+            white-space: pre-line;
+            text-align: left;
+            min-height: 150px;
+            position: relative;
+        }
+
+        #poem-text {
+            line-height: 1.6;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1> Princesita de Ojitos Lindos 💗</h1>
+        </header>
+
+        <div class="media-container">
+            <div class="local-video-container">
+                <img src="https://github.com/jesuxzx/Detalle/raw/bc55785e9241a0d4c5e53406d3d5f83cc7088f87/IMG-20251103-WA0020.jpg" alt="Una hermosa imagen">
+            </div>
+        </div>
+
+        <div class="video-player">
+            <div id="youtube-player"></div>
+        </div>
+
+        <div class="poem-container">
+            <p id="poem-text"></p>
+        </div>
+    </div>
+    
+    <script>
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        var hasStartedTyping = false;
+        var checkTimeInterval;
+        const TRIGGER_TIME = 24; // El tiempo en segundos para iniciar la escritura
+        const videoId = 'p_1Osm5xE5Y'; 
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                height: '360',
+                width: '640',
+                videoId: videoId, 
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 1,
+                    'modestbranding': 1,
+                    'rel': 0,
+                    'showinfo': 0
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            // Se puede iniciar la verificación de tiempo aquí, aunque se hará principalmente en onPlayerStateChange
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.PLAYING) {
+                // Inicia la verificación del tiempo cuando el video esté reproduciéndose
+                if (!checkTimeInterval) {
+                    checkTimeInterval = setInterval(checkVideoTime, 500); // Revisa cada 500ms
+                }
+            } else {
+                // Detiene la verificación si el video está pausado, detenido, etc.
+                clearInterval(checkTimeInterval);
+                checkTimeInterval = null;
+            }
+        }
+        
+        function checkVideoTime() {
+            if (player && player.getCurrentTime) {
+                const currentTime = player.getCurrentTime();
+                
+                // Si el tiempo actual es mayor o igual al tiempo de activación Y la escritura aún no ha comenzado
+                if (currentTime >= TRIGGER_TIME && !hasStartedTyping) {
+                    hasStartedTyping = true;
+                    clearInterval(checkTimeInterval); // Detiene la verificación
+                    typePoem(); 
+                }
+            }
+        }
+        
+        const poemText = document.getElementById('poem-text');
+        const poem = `
+En tus lindos y hermosos ojitos encuentro la calma y la verdad que mi alma necesita. Son dos luceros que iluminan mi mundo entero y le dan color a mi vida.
+
+Cada vez que me miras siento un universo infinito de ternura y dulzura. No hay poema ni canción que pueda describir la magia que irradian.
+
+Son el espejo de tu corazón un reflejo de tu alma pura y bondadosa. Gracias por dejarme ver a través de ellos mi amada princesita de ojitos lindos. Son lo más hermoso que he visto jamás.
+`; 
+        let charIndex = 0;
+        const typingSpeed = 90;
+
+        function typePoem() {
+            if (charIndex < poem.length) {
+                if (poem.charAt(charIndex) === '\n') {
+                    poemText.innerHTML += '<br>';
+                } else {
+                    poemText.innerHTML += poem.charAt(charIndex);
+                }
+                charIndex++;
+                setTimeout(typePoem, typingSpeed);
+            }
+        }
+    </script>
+</body>
+</html>
